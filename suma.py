@@ -1,8 +1,4 @@
-"""
-Created on Mon Apr  6 15:07:08 2020
 
-@author: santoyo-yo Cristan Patiño
-"""
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 
