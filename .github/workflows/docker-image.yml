@@ -1,29 +1,30 @@
-name: summaCI
+name: Run Unit Tests
 
 on:
   push:
     branches:
-      - master
+      - master  # Cambia 'main' al nombre de tu rama principal si es diferente
   pull_request:
     branches:
       - master
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile -t sebastiannavia/micro-calculadora-suma:0.0.${{ github.run_number }}
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        python-version: '3.x'  # Cambia esto a la versión de Python que estás utilizando
 
-    - name: Push into Docker-hub
-      run: docker push sebastiannavia/micro-calculadora-suma:0.0.${{ github.run_number }}
+    - name: Install dependencies
+      run: pip install -r requirements.txt  # Ajusta el nombre del archivo si es diferente
+
+    - name: Run unit tests
+      run: pytest  # Ajusta el comando si estás utilizando un framework de pruebas diferente
+    - name: Run additional tests
+      run: python -m unittest discover test
