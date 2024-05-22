@@ -32,7 +32,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: Sebastianavia/Calculadora-CD
-        ref: "main"
+        ref: "master"
         path: deployment_repo
         token: ${{ secrets.REPO_TOKEN }}
         fetch-depth: 0
