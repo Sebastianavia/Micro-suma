@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile -t sebastiannavia/micro-calculadora-suma:${{ github.run_number }}
+      run: docker build . --file Dockerfile -t sebastiannavia/micro-calculadora-suma:0.0.${{ github.run_number }}
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
@@ -26,4 +26,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Push into Docker-hub
-      run: docker push sebastiannavia/micro-calculadora-suma:${{ github.run_number }}
+      run: docker push sebastiannavia/micro-calculadora-suma:0.0.${{ github.run_number }}
