@@ -47,3 +47,4 @@ jobs:
         git add values.yaml
         git commit -m "Update image tag to 0.0.${{ github.run_number }}"
         git push
+
