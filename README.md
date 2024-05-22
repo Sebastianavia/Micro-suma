@@ -34,5 +34,5 @@ WORKDIR /app: Establece el directorio de trabajo dentro del contenedor en /app.
 COPY requirements.txt /app: Copia el archivo requirements.txt al directorio de trabajo del contenedor.
 RUN pip install -r requirements.txt: Instala las dependencias de Python listadas en requirements.txt.
 COPY suma.py /app: Copia el archivo suma.py al directorio de trabajo del contenedor.
-CMD python suma.py: Define el comando por defecto para ejecutar el archivo suma.py.
+CMD python suma.py: Define el comando por defecto para ejecutar el archivo suma.py ..
 
