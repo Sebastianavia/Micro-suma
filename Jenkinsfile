@@ -1,39 +1,34 @@
-podTemplate(label: 'build', containers: [
-    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
-  ],
-  volumes: [
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]
-) {
-  node('build') {
-    container('docker') {
+node {
+    def app
+
+    stage('Clone repository') {
+      
+
+        checkout scm
+    }
+
+    stage('Build image') {
   
-      def app
+       app = docker.build("sebastiannavia/micro-calculadora-suma")
+    }
 
-      stage('Clone repository') {
-          checkout scm
-      }
+    stage('Test image') {
+  
 
-      stage('Build image') {
-          app = docker.build("sebastiannavia/micro-calculadora-suma")
-      }
+        app.inside {
+            sh 'echo "Tests passed"'
+        }
+    }
 
-      stage('Test image') {
-          app.inside {
-              sh 'echo "Tests passed"'
-          }
-      }
-
-      stage('Push image') {
-          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-              app.push("${env.BUILD_NUMBER}")
-          }
-      }
-
-      stage('Trigger ManifestUpdate') {
-          echo "triggering updatemanifestjob"
-          build job: 'updatemanifest-suma', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-      }
-    }        
-  }  
+    stage('Push image') {
+        
+        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+            app.push("${env.BUILD_NUMBER}")
+        }
+    }
+    
+    stage('Trigger ManifestUpdate') {
+                echo "triggering updatemanifestjob"
+                build job: 'updatemanifest-suma', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        }
 }
