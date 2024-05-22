@@ -26,6 +26,9 @@ La aplicación se configura para ejecutarse en host='0.0.0.0' y port='3030'.
 
 ### Dockerfile
 
+---
+
+
 Este Dockerfile se utiliza para crear una imagen Docker del microservicio de suma:
 
 FROM python:3.6: Utiliza Python 3.6 como imagen base.
