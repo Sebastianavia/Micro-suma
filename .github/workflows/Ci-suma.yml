@@ -1,0 +1,49 @@
+name: summaCI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile -t sebastiannavia/micro-calculadora-suma:0.0.${{ github.run_number }}
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push into Docker-hub
+      run: docker push sebastiannavia/micro-calculadora-suma:0.0.${{ github.run_number }}
+
+    - name: Check out the Deployment_ToDo_App repository
+      uses: actions/checkout@v2
+      with:
+        repository: Sebastianavia/Calculadora-CD
+        ref: "main"
+        path: deployment_repo
+        token: ${{ secrets.REPO_TOKEN }}
+        fetch-depth: 0
+        persist-credentials: true
+
+    - name: Update values.yml with new tag
+      run: |
+        cd deployment_repo/suma
+        sed -i 's/tag: .*/tag: "0.0.${{ github.run_number }}"/' values.yaml
+        git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git config --global user.name "${{ secrets.GIT_USER_NAME }}"
+        git add values.yaml
+        git commit -m "Update image tag to 0.0.${{ github.run_number }}"
+        git push
